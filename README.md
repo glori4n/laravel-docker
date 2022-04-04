@@ -7,6 +7,6 @@ This project is an exercise exploring Docker and its usage with Laravel, packed 
 # Installation
 1. Clone the repository or download it;
 2. Make a copy of the <b>.env.example</b> file in the same location with the name <b>.env</b> for each of the projects;
-3. Adjust the .env according to the docker-compose.yml project;
-4. Run php artisan key:generate to generate a new key for the project;
-5. Run docker-compose up -d to built the container and services.
+3. Adjust the <b>.env</b> according to the <b>docker-compose.yml</b> project;
+4. Run <b>php artisan key:generate</b> to generate a new key for the project;
+5. Run <b>docker-compose up -d</b> to build the container and services.
