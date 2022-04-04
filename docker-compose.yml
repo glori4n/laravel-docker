@@ -1,0 +1,64 @@
+version: '2.0'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-docker/glori4n
+    container_name: laravel-docker-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: laravel-docker-app
+      SERVICE_TAGS: dev
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www/
+      - ./docker-compose/php/laravel-docker.ini:/usr/local/etc/php/conf.d/laravel-docker.ini
+    networks:
+      - laravel-docker
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: laravel-docker-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/
+      - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - laravel-docker
+
+  #MySQL Service
+  db:
+    image: mysql:5.7.32
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel_docker
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker-compose/mysql/laravel-docker.cnf:/etc/mysql/laravel-docker.cnf
+    networks:
+      - laravel-docker
+
+#Docker Networks
+networks:
+  laravel-docker:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
